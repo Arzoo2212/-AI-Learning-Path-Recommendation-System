@@ -10,9 +10,9 @@ namespace AI_Course_Recommendation_System.Models
         [Range(1,5)]
         public int CurrentLevel { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public int SkillId { get; set; }
-        public Skill Skill { get; set; }
+        public Skill? Skill { get; set; }
     }
 }

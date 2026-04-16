@@ -8,7 +8,7 @@ namespace AI_Course_Recommendation_System.Models
        
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; }
         public List<RoleSkill> RoleSkills { get; set; } = [];
     }
 }
