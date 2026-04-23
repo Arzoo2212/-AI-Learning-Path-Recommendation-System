@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DTO's\DTOs.csproj" />
+    <ProjectReference Include="..\..\Shared\DTO\DTO.csproj" />
   </ItemGroup>
 
 </Project>

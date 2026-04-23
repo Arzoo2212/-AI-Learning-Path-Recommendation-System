@@ -1,6 +1,6 @@
 using AI_Course_Recommendation_System.Data;
 using AI_Course_Recommendation_System.Models;
-using DTOs;
+using DTO;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
