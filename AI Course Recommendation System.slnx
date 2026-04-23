@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../DTO's/DTO's.csproj" Id="bca19bbe-0984-4698-b95e-c3ed4a32284f" />
+  <Project Path="../DTO's/DTOs.csproj" Id="bca19bbe-0984-4698-b95e-c3ed4a32284f" />
   <Project Path="../UI/UI.csproj" Id="490dd2ca-e2e7-4bdb-ac69-a727f36a5246" />
   <Project Path="WebAPI.csproj" />
 </Solution>

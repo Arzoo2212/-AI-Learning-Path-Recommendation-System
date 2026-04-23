@@ -7,6 +7,7 @@ namespace AI_Course_Recommendation_System.Models
         [Key]
        
         public int Id { get; set; }
+        [Required]
         [Range(1,5)]
         public int CurrentLevel { get; set; }
         public int UserId { get; set; }

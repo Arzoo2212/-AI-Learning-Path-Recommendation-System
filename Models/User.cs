@@ -1,7 +1,5 @@
-﻿using AI_Course_Recommendation_System.Models;
-using System.DataAnnotations;
-using System.Xml;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace AI_Course_Recommendation_System.Models
 {
         public class User

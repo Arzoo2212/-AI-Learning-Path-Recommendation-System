@@ -1,6 +1,6 @@
 using AI_Course_Recommendation_System.Data;
-using AI_Course_Recommendation_System.DTO;
 using AI_Course_Recommendation_System.Models;
+using DTOs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +16,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddAutoMapper(o =>
-   { o.CreateMap<User, UserDTO>().ReverseMap(); });
+   { o.CreateMap<User, CreateUserDTO>().ReverseMap();
+       o.CreateMap<User, UpdateUserDTO>().ReverseMap();
+       o.CreateMap<User, UserDTO>().ReverseMap();
+       o.CreateMap<Role, RoleDTO>().ReverseMap();
+     o.CreateMap<Skill, SkillDTO>().ReverseMap();
+       o.CreateMap<UserSkill, SkillLevelResponseDTO>()
+        .ForMember(dest => dest.SkillName,
+            opt => opt.MapFrom(src => src.Skill.Name));
+       o.CreateMap<RoleSkill, RoleSkillLevelResponseDTO>()
+      .ForMember(dest => dest.SkillName,
+          opt => opt.MapFrom(src => src.Skill.Name));
+
+   });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
