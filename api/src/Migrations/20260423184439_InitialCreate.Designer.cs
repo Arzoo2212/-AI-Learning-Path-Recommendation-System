@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AI_Course_Recommendation_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260408090720_InitialCreate")]
+    [Migration("20260423184439_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -40,6 +40,18 @@ namespace AI_Course_Recommendation_System.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Frontend Developer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Backend Developer"
+                        });
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.RoleSkill", b =>
@@ -67,6 +79,29 @@ namespace AI_Course_Recommendation_System.Migrations
                         .IsUnique();
 
                     b.ToTable("RoleSkills");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RequiredLevel = 4,
+                            RoleId = 1,
+                            SkillId = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RequiredLevel = 3,
+                            RoleId = 1,
+                            SkillId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RequiredLevel = 4,
+                            RoleId = 2,
+                            SkillId = 5
+                        });
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.Skill", b =>
@@ -84,6 +119,33 @@ namespace AI_Course_Recommendation_System.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "HTML"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "CSS"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "JavaScript"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "React"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "SQL"
+                        });
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.User", b =>
@@ -112,7 +174,14 @@ namespace AI_Course_Recommendation_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -122,7 +191,38 @@ namespace AI_Course_Recommendation_System.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserRoleId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AI_Course_Recommendation_System.Models.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.UserSkill", b =>
@@ -179,7 +279,15 @@ namespace AI_Course_Recommendation_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AI_Course_Recommendation_System.Models.UserRole", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Role");
+
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.UserSkill", b =>

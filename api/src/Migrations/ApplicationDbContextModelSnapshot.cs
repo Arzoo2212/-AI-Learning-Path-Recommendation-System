@@ -171,7 +171,14 @@ namespace AI_Course_Recommendation_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -181,18 +188,37 @@ namespace AI_Course_Recommendation_System.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserRoleId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AI_Course_Recommendation_System.Models.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CareerGoal = "",
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "arzoo@test.com",
-                            ExperienceLevel = 0,
-                            Name = "Arzoo",
-                            RoleId = 1
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
                         });
                 });
 
@@ -221,22 +247,6 @@ namespace AI_Course_Recommendation_System.Migrations
                         .IsUnique();
 
                     b.ToTable("UserSkills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CurrentLevel = 2,
-                            SkillId = 3,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CurrentLevel = 1,
-                            SkillId = 4,
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.RoleSkill", b =>
@@ -266,7 +276,15 @@ namespace AI_Course_Recommendation_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AI_Course_Recommendation_System.Models.UserRole", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Role");
+
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("AI_Course_Recommendation_System.Models.UserSkill", b =>

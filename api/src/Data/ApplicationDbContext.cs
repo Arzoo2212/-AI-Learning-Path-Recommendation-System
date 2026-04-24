@@ -10,6 +10,7 @@ namespace AI_Course_Recommendation_System.Data
             public DbSet<Skill> Skills { get; set; }
             public DbSet<UserSkill> UserSkills { get; set; }
             public DbSet<RoleSkill> RoleSkills { get; set; }
+            public DbSet<UserRole> UserRoles { get; set; }
 
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -62,15 +63,20 @@ namespace AI_Course_Recommendation_System.Data
                 new RoleSkill { Id = 3, RoleId = 2, SkillId = 5, RequiredLevel = 4 }
             );
 
-            // Users
-            modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Name = "Arzoo", Email = "arzoo@test.com", RoleId = 1 }
-            );
+            //// Users
+            //modelBuilder.Entity<User>().HasData(
+            //    new User { Id = 1, Name = "Arzoo", Email = "arzoo@test.com", RoleId = 1 }
+            //);
 
-            // UserSkills
-            modelBuilder.Entity<UserSkill>().HasData(
-                new UserSkill { Id = 1, UserId = 1, SkillId = 3, CurrentLevel = 2 },
-                new UserSkill { Id = 2, UserId = 1, SkillId = 4, CurrentLevel = 1 }
+            //// UserSkills
+            //modelBuilder.Entity<UserSkill>().HasData(
+            //    new UserSkill { Id = 1, UserId = 1, SkillId = 3, CurrentLevel = 2 },
+            //    new UserSkill { Id = 2, UserId = 1, SkillId = 4, CurrentLevel = 1 }
+            //);
+            // UserRoles
+            modelBuilder.Entity<UserRole>().HasData(
+                new UserRole { Id = 1, Name = "Admin" },
+                new UserRole { Id = 2, Name = "User" }
             );
 
         }
