@@ -24,7 +24,7 @@ public class RegisterTest
         context.UserRoles.Add(new UserRole { Name = "User" });
         await context.SaveChangesAsync();
 
-        // 🔥 Mock mapper
+        //  Mock mapper
         var mockMapper = new Mock<IMapper>();
 
         mockMapper

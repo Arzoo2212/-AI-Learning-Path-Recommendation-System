@@ -32,20 +32,20 @@ namespace AI_Course_Recommendation_System.Services
         //  REGISTER
         public async Task<UserDTO?> RegisterAsync(CreateUserDTO dto)
         {
-            // 1️⃣ Email check
+            //  Email check
             var email = dto.Email.Trim().ToLower();
 
             if (await _db.Users.AnyAsync(u => u.Email == email))
                 throw new Exception("User already exists");
 
-            // 2️⃣ Auth Role (User)
+            //  Auth Role (User)
             var userRole = await _db.UserRoles
                 .FirstOrDefaultAsync(r => r.Name.ToLower() == "user");
 
             if (userRole == null)
                 throw new Exception("Default role not found");
 
-            // 3️⃣ 🔥 YAHAN ADD KARNA HAI (Job Role Logic)
+            // Job Role Logic
             var roleName = dto.RoleName.Trim().ToLower();
 
             var role = await _db.Roles
@@ -62,7 +62,7 @@ namespace AI_Course_Recommendation_System.Services
                 await _db.SaveChangesAsync();
             }
 
-            // 4️⃣ User create
+            // User create
             var user = new User
             {
                 Name = dto.Name,
@@ -81,7 +81,7 @@ namespace AI_Course_Recommendation_System.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            // 5️⃣ Save
+            //  Save
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
 
