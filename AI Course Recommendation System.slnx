@@ -1,5 +1,4 @@
 <Solution>
   <Project Path="api/src/WebAPI.csproj" />
   <Project Path="api/tests/tests.csproj" Id="595a5773-b103-425f-bda7-487903cbbcc5" />
-  <Project Path="Shared/DTO/DTO.csproj" />
 </Solution>

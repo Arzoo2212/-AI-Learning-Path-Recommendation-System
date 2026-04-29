@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace DTO
+namespace AI_Course_Recommendation_System.DTO
 {
-    public class CreateUserDTO
+    public class UpdateUserDTO
     {
         [Required]
         public string Name { get; set; }
@@ -10,11 +13,10 @@ namespace DTO
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
+       
 
         [Required]
-        public string RoleName { get; set; }   
+        public string RoleName { get; set; }
 
         public int ExperienceLevel { get; set; }
 

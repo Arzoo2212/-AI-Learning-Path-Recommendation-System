@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DTO;
+using AI_Course_Recommendation_System.DTO;
 using AI_Course_Recommendation_System.Services;
 
 namespace AI_Course_Recommendation_System.Controllers

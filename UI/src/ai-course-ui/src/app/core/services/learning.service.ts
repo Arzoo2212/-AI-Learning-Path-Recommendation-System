@@ -14,16 +14,22 @@ export class LearningService {
 
   // TODO: Replace with actual backend endpoints when implemented
   getSkills(userId: number): Observable<Skill[]> {
-    // For now, return user skills with default requiredLevel
+    // TEMPORARY: Using placeholder requiredLevel calculation
+    // PROPER IMPLEMENTATION: Backend should return requiredLevel based on:
+    //   1. User's career goal
+    //   2. Job market analysis
+    //   3. AI-powered skill requirement analysis
     return this.http.get<ApiResponse<any>>(`${this.base}/UserSkills/${userId}`).pipe(
       map(res => {
         if (!res.data || !res.data.skills) return [];
         return res.data.skills.map((s: any) => ({
           id: 0,
           name: s.skillName,
-          category: 'General',
+          category: s.category || 'General',
           currentLevel: s.currentLevel,
-          requiredLevel: Math.min(s.currentLevel + 2, 5), // Default: 2 levels above current
+          // TEMPORARY: Default to 2 levels above current (capped at 5)
+          // REPLACE THIS: Use s.requiredLevel from backend when available
+          requiredLevel: s.requiredLevel || Math.min(s.currentLevel + 2, 5),
         }));
       })
     );

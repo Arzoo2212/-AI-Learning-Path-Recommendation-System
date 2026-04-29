@@ -1,381 +1,536 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserService } from '../../../core/services/user.service';
 
-interface SkillInput {
+interface FieldError {
   name: string;
-  level: number;
+  email: string;
+  password: string;
+  roleName: string;
+  experienceLevel: string;
+  careerGoal: string;
 }
 
 @Component({
   selector: 'app-signup',
   imports: [FormsModule, RouterLink],
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div class="w-full max-w-2xl">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-4 shadow-lg">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-            </svg>
-          </div>
-          <h1 class="text-2xl font-bold text-gray-900">LearnPath AI</h1>
-          <p class="text-gray-500 mt-1">Create your learning account</p>
-        </div>
+    <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-8">
+      <!-- Main Container -->
+      <div class="w-full max-w-6xl bg-white rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.07)] overflow-hidden my-auto">
+        <div class="grid lg:grid-cols-2 min-h-[500px]">
+          
+          <!-- Left Side - Hero Section -->
+          <div class="relative bg-gradient-to-br from-purple-600 via-purple-500 to-blue-500 flex flex-col overflow-hidden">
+            <!-- Decorative circles -->
+            <!-- <div class="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-20 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-white/5 rounded-full blur-xl"></div> -->
 
-        <!-- Progress Steps -->
-        <div class="flex items-center justify-center mb-8">
-          <div class="flex items-center gap-2">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-                [class]="step() === 1 ? 'bg-indigo-600 text-white' : 'bg-green-500 text-white'">
-                @if (step() > 1) {
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                } @else {
-                  1
-                }
-              </div>
-              <span class="text-sm font-medium" [class]="step() === 1 ? 'text-gray-900' : 'text-gray-500'">Account Info</span>
-            </div>
-            <div class="w-12 h-0.5" [class]="step() === 2 ? 'bg-indigo-600' : 'bg-gray-300'"></div>
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-                [class]="step() === 2 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'">
-                2
-              </div>
-              <span class="text-sm font-medium" [class]="step() === 2 ? 'text-gray-900' : 'text-gray-500'">Your Skills</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          @if (error()) {
-            <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
-              {{ error() }}
-            </div>
-          }
-
-          <!-- Step 1: Account Information -->
-          @if (step() === 1) {
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Account Information</h2>
-            <form (ngSubmit)="nextStep()" class="space-y-4">
-              <!-- Full Name -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
-                <input type="text" [(ngModel)]="name" name="name" required
-                  placeholder="John Doe"
-                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col items-center justify-center relative px-8 lg:px-12 py-6 lg:py-8">
+              <!-- Brand Name -->
+              <div class="relative z-10 text-center mb-4 lg:mb-6">
+                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
+                  LearnPath AI
+                </h2>
+                <p class="text-white/90 text-sm lg:text-base leading-relaxed max-w-md mx-auto">
+                  Start your personalized learning journey today. 
+                  Our AI creates custom paths based on your goals.
+                </p>
               </div>
 
-              <!-- Email -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
-                <input type="email" [(ngModel)]="email" name="email" required
-                  placeholder="you@company.com"
-                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
-              </div>
-
-              <!-- Password -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-                <input type="password" [(ngModel)]="password" name="password" required
-                  placeholder="••••••••"
-                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
-                <p class="text-xs text-gray-500 mt-1">At least 8 characters</p>
-              </div>
-
-              <!-- Role & Experience Level -->
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1.5">Current Role</label>
-                  <input type="text" [(ngModel)]="roleName" name="roleName" required
-                    placeholder="Software Engineer"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1.5">Experience Level</label>
-                  <select [(ngModel)]="experienceLevel" name="experienceLevel" required
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition">
-                    <option value="0">Entry Level (0-2 years)</option>
-                    <option value="1">Junior (2-4 years)</option>
-                    <option value="2">Mid-Level (4-7 years)</option>
-                    <option value="3">Senior (7-10 years)</option>
-                    <option value="4">Lead (10+ years)</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Career Goal -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Career Goal</label>
-                <input type="text" [(ngModel)]="careerGoal" name="careerGoal" required
-                  placeholder="Engineering Manager"
-                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
-                <p class="text-xs text-gray-500 mt-1">What role are you working towards?</p>
-              </div>
-
-              <button type="submit"
-                class="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-md hover:shadow-lg mt-2">
-                Next: Add Your Skills
-              </button>
-            </form>
-          }
-
-          <!-- Step 2: Skills -->
-          @if (step() === 2) {
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Add Your Current Skills</h2>
-            <p class="text-sm text-gray-500 mb-6">Help us understand your current skill level to provide better recommendations.</p>
-
-            <div class="space-y-4">
-              <!-- Skill Input -->
-              <div class="flex gap-3">
-                <div class="flex-1">
-                  <input type="text" [(ngModel)]="newSkillName" placeholder="Skill name (e.g., TypeScript, Leadership)"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition"/>
-                </div>
-                <div class="w-40">
-                  <select [(ngModel)]="newSkillLevel"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition">
-                    <option value="1">Beginner</option>
-                    <option value="2">Elementary</option>
-                    <option value="3">Intermediate</option>
-                    <option value="4">Advanced</option>
-                    <option value="5">Expert</option>
-                  </select>
-                </div>
-                <button type="button" (click)="addSkill()"
-                  class="px-4 py-2.5 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-200 transition">
-                  Add
-                </button>
-              </div>
-
-              <!-- Skills List -->
-              @if (skills().length > 0) {
-                <div class="border border-gray-200 rounded-lg p-4 max-h-64 overflow-y-auto">
-                  <div class="space-y-2">
-                    @for (skill of skills(); track $index) {
-                      <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex items-center gap-3 flex-1">
-                          <span class="text-sm font-medium text-gray-800">{{ skill.name }}</span>
-                          <div class="flex gap-1">
-                            @for (dot of [1,2,3,4,5]; track dot) {
-                              <div class="w-2 h-2 rounded-full"
-                                [class]="dot <= skill.level ? 'bg-indigo-500' : 'bg-gray-300'"></div>
-                            }
-                          </div>
-                          <span class="text-xs text-gray-500">Level {{ skill.level }}</span>
-                        </div>
-                        <button type="button" (click)="removeSkill($index)"
-                          class="text-gray-400 hover:text-red-500 transition">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                          </svg>
-                        </button>
-                      </div>
-                    }
+              <!-- Feature Cards -->
+              <div class="relative z-10 grid grid-cols-3 gap-3 lg:gap-4 mb-4 lg:mb-6 max-w-2xl">
+                <!-- Smart Learning -->
+                <div class="text-center">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2 mx-auto border border-white/30 shadow-lg">
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
                   </div>
+                  <h3 class="font-semibold text-white text-xs">Smart Learning</h3>
                 </div>
-              } @else {
-                <div class="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                  <svg class="w-12 h-12 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                  </svg>
-                  <p class="text-sm text-gray-500">No skills added yet. Add your first skill above.</p>
+
+                <!-- Track Progress -->
+                <div class="text-center">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2 mx-auto border border-white/30 shadow-lg">
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                  </div>
+                  <h3 class="font-semibold text-white text-xs">Track Progress</h3>
+                </div>
+
+                <!-- Custom Courses -->
+                <div class="text-center">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-2 mx-auto border border-white/30 shadow-lg">
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                  </div>
+                  <h3 class="font-semibold text-white text-xs">Custom Courses</h3>
+                </div>
+              </div>
+
+              <!-- AI Learning Illustration -->
+              <div class="relative z-10 w-full max-w-[280px] lg:max-w-sm">
+                <img 
+                  src="ai_illustraion.png" 
+                  alt="AI Learning Illustration" 
+                  class="w-full h-auto drop-shadow-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side - Form -->
+          <div class="p-4 lg:p-6 flex items-center justify-center bg-gradient-to-br from-slate-50 to-white">
+            <div class="w-full max-w-md">
+              <!-- Header -->
+              <div class="text-center mb-2">
+                <h1 class="text-lg font-bold text-slate-900 mb-0.5">Create Your Account</h1>
+                <p class="text-slate-500 text-[10px]">Join us and start your learning journey</p>
+              </div>
+
+              <!-- Error Messages -->
+              @if (error()) {
+                <div class="mb-2 p-2 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
+                  <div class="flex items-start">
+                    <svg class="w-3 h-3 text-red-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div class="flex-1">
+                      <p class="text-[10px] text-red-700">{{ error() }}</p>
+                      @if (error().toLowerCase().includes('email') && error().toLowerCase().includes('already')) {
+                        <a routerLink="/login" class="text-[10px] text-red-600 hover:text-red-800 font-semibold underline mt-1 inline-block">
+                          Go to Login →
+                        </a>
+                      }
+                    </div>
+                  </div>
                 </div>
               }
 
-              <!-- Action Buttons -->
-              <div class="flex gap-3 pt-4">
-                <button type="button" (click)="prevStep()"
-                  class="px-6 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
-                  Back
-                </button>
-                <button type="button" (click)="submitSignup()" [disabled]="loading()"
-                  class="flex-1 py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+              <!-- Form -->
+              <form (ngSubmit)="submitSignup()" class="space-y-2">
+                <!-- Full Name -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Full Name</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="name" 
+                    name="name" 
+                    required
+                    (blur)="validateName()"
+                    (input)="touched.name && validateName()"
+                    placeholder="Enter your full name"
+                    [class.border-red-300]="touched.name && fieldErrors().name"
+                    [class.bg-red-50]="touched.name && fieldErrors().name"
+                    [class.border-green-300]="touched.name && !fieldErrors().name && name"
+                    [class.bg-green-50]="touched.name && !fieldErrors().name && name"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 placeholder:text-[10px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  />
+                  @if (touched.name && fieldErrors().name) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().name }}
+                    </p>
+                  }
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Email Address</label>
+                  <input 
+                    type="email" 
+                    [(ngModel)]="email" 
+                    name="email" 
+                    required
+                    (blur)="validateEmail()"
+                    (input)="touched.email && validateEmail()"
+                    placeholder="Enter your email"
+                    [class.border-red-300]="touched.email && fieldErrors().email"
+                    [class.bg-red-50]="touched.email && fieldErrors().email"
+                    [class.border-green-300]="touched.email && !fieldErrors().email && email"
+                    [class.bg-green-50]="touched.email && !fieldErrors().email && email"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 placeholder:text-[10px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  />
+                  @if (touched.email && fieldErrors().email) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().email }}
+                    </p>
+                  }
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Password</label>
+                  <input 
+                    type="password" 
+                    [(ngModel)]="password" 
+                    name="password" 
+                    required
+                    (blur)="validatePassword()"
+                    (input)="touched.password && validatePassword()"
+                    placeholder="Create a password"
+                    [class.border-red-300]="touched.password && fieldErrors().password"
+                    [class.bg-red-50]="touched.password && fieldErrors().password"
+                    [class.border-green-300]="touched.password && !fieldErrors().password && password"
+                    [class.bg-green-50]="touched.password && !fieldErrors().password && password"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 placeholder:text-[10px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  />
+                  @if (touched.password && fieldErrors().password) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().password }}
+                    </p>
+                  }
+                  @if (touched.password && !fieldErrors().password && password) {
+                    <p class="text-[9px] text-green-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                      </svg>
+                      Strong password
+                    </p>
+                  }
+                </div>
+
+                <!-- Role -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Role</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="roleName" 
+                    name="roleName" 
+                    required
+                    (blur)="validateRole()"
+                    (input)="touched.roleName && validateRole()"
+                    placeholder="Select your role"
+                    [class.border-red-300]="touched.roleName && fieldErrors().roleName"
+                    [class.bg-red-50]="touched.roleName && fieldErrors().roleName"
+                    [class.border-green-300]="touched.roleName && !fieldErrors().roleName && roleName"
+                    [class.bg-green-50]="touched.roleName && !fieldErrors().roleName && roleName"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 placeholder:text-[10px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  />
+                  @if (touched.roleName && fieldErrors().roleName) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().roleName }}
+                    </p>
+                  }
+                </div>
+
+                <!-- Experience Level -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Experience Level</label>
+                  <select 
+                    [(ngModel)]="experienceLevel" 
+                    name="experienceLevel" 
+                    required
+                    (blur)="validateExperienceLevel()"
+                    (change)="validateExperienceLevel()"
+                    [class.border-red-300]="touched.experienceLevel && fieldErrors().experienceLevel"
+                    [class.bg-red-50]="touched.experienceLevel && fieldErrors().experienceLevel"
+                    [class.border-green-300]="touched.experienceLevel && !fieldErrors().experienceLevel && experienceLevel >= 0"
+                    [class.bg-green-50]="touched.experienceLevel && !fieldErrors().experienceLevel && experienceLevel >= 0"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled selected>Select experience level</option>
+                    <option value="0">Entry Level</option>
+                    <option value="1">Junior</option>
+                    <option value="2">Mid-Level</option>
+                    <option value="3">Senior</option>
+                    <option value="4">Lead</option>
+                  </select>
+                  @if (touched.experienceLevel && fieldErrors().experienceLevel) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().experienceLevel }}
+                    </p>
+                  }
+                </div>
+
+                <!-- Career Goal -->
+                <div class="space-y-0.5">
+                  <label class="text-[10px] font-medium text-slate-700">Career Goal</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="careerGoal" 
+                    name="careerGoal" 
+                    required
+                    (blur)="validateCareerGoal()"
+                    (input)="touched.careerGoal && validateCareerGoal()"
+                    placeholder="Select your career goal"
+                    [class.border-red-300]="touched.careerGoal && fieldErrors().careerGoal"
+                    [class.bg-red-50]="touched.careerGoal && fieldErrors().careerGoal"
+                    [class.border-green-300]="touched.careerGoal && !fieldErrors().careerGoal && careerGoal"
+                    [class.bg-green-50]="touched.careerGoal && !fieldErrors().careerGoal && careerGoal"
+                    class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 placeholder-slate-400 placeholder:text-[10px] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  />
+                  @if (touched.careerGoal && fieldErrors().careerGoal) {
+                    <p class="text-[9px] text-red-600 mt-0.5 flex items-center gap-1">
+                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      {{ fieldErrors().careerGoal }}
+                    </p>
+                  }
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                  type="submit" 
+                  [disabled]="loading()"
+                  class="w-full py-1.5 px-6 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white text-xs font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl flex items-center justify-center gap-2 mt-2"
+                >
                   @if (loading()) {
-                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                     </svg>
-                    Creating account...
+                    Creating Account...
                   } @else {
                     Create Account
                   }
                 </button>
-              </div>
-              <p class="text-xs text-gray-400 text-center">You can skip this step and add skills later from your profile.</p>
-            </div>
-          }
+              </form>
 
-          <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600">
-              Already have an account?
-              <a routerLink="/login" class="text-indigo-600 font-medium hover:underline ml-1">Sign in</a>
-            </p>
+              <!-- Login Link -->
+              <div class="mt-2 text-center">
+                <p class="text-slate-600 text-[10px]">
+                  Already have an account?
+                  <a routerLink="/login" class="text-purple-600 hover:text-purple-700 font-semibold ml-1 transition-colors">Login</a>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   `,
 })
-export class Signup {
-  // Step 1 fields
+export class Signup implements OnInit, OnDestroy {
   name = '';
   email = '';
   password = '';
   roleName = '';
   experienceLevel = 0;
   careerGoal = '';
-
-  // Step 2 fields
-  newSkillName = '';
-  newSkillLevel = 3;
-  skills = signal<SkillInput[]>([]);
-
-  // UI state
-  step = signal(1);
   error = signal('');
   loading = signal(false);
+  fieldErrors = signal<FieldError>({
+    name: '',
+    email: '',
+    password: '',
+    roleName: '',
+    experienceLevel: '',
+    careerGoal: ''
+  });
+  touched = {
+    name: false,
+    email: false,
+    password: false,
+    roleName: false,
+    experienceLevel: false,
+    careerGoal: false
+  };
 
   private authService = inject(AuthService);
-  private userService = inject(UserService);
   private router = inject(Router);
 
-  // Expose for debugging
-  get apiBase() {
-    return (this.userService as any).base;
+  ngOnInit(): void {
+    // Component initialization
   }
 
-  nextStep(): void {
-    if (!this.name || !this.email || !this.password || !this.roleName || !this.careerGoal) {
-      this.error.set('Please fill in all fields.');
-      return;
-    }
-
-    if (this.password.length < 8) {
-      this.error.set('Password must be at least 8 characters.');
-      return;
-    }
-
-    this.error.set('');
-    this.step.set(2);
+  ngOnDestroy(): void {
+    // No cleanup needed
   }
 
-  prevStep(): void {
-    this.step.set(1);
-    this.error.set('');
+  validateName(): void {
+    this.touched.name = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (!this.name.trim()) {
+      errors.name = 'Name is required';
+    } else if (this.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    } else if (this.name.trim().length > 50) {
+      errors.name = 'Name must not exceed 50 characters';
+    } else if (!/^[a-zA-Z\s'-]+$/.test(this.name)) {
+      errors.name = 'Name can only contain letters, spaces, hyphens, and apostrophes';
+    } else {
+      errors.name = '';
+    }
+    
+    this.fieldErrors.set(errors);
   }
 
-  addSkill(): void {
-    const name = this.newSkillName.trim();
-    if (!name) {
-      this.error.set('Please enter a skill name.');
-      return;
+  validateEmail(): void {
+    this.touched.email = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (!this.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+      errors.email = 'Please enter a valid email address';
+    } else if (this.email.length > 100) {
+      errors.email = 'Email must not exceed 100 characters';
+    } else {
+      errors.email = '';
     }
-
-    // Check for duplicates
-    if (this.skills().some(s => s.name.toLowerCase() === name.toLowerCase())) {
-      this.error.set('This skill has already been added.');
-      return;
-    }
-
-    this.skills.update(current => [...current, { name, level: this.newSkillLevel }]);
-    this.newSkillName = '';
-    this.newSkillLevel = 3;
-    this.error.set('');
+    
+    this.fieldErrors.set(errors);
   }
 
-  removeSkill(index: number): void {
-    this.skills.update(current => current.filter((_, i) => i !== index));
+  validatePassword(): void {
+    this.touched.password = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (!this.password) {
+      errors.password = 'Password is required';
+    } else if (this.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters';
+    } else if (this.password.length > 100) {
+      errors.password = 'Password must not exceed 100 characters';
+    } else if (!/(?=.*[a-z])/.test(this.password)) {
+      errors.password = 'Password must contain at least one lowercase letter';
+    } else if (!/(?=.*[A-Z])/.test(this.password)) {
+      errors.password = 'Password must contain at least one uppercase letter';
+    } else if (!/(?=.*\d)/.test(this.password)) {
+      errors.password = 'Password must contain at least one number';
+    } else if (!/(?=.*[@$!%*?&#])/.test(this.password)) {
+      errors.password = 'Password must contain at least one special character (@$!%*?&#)';
+    } else {
+      errors.password = '';
+    }
+    
+    this.fieldErrors.set(errors);
+  }
+
+  validateRole(): void {
+    this.touched.roleName = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (!this.roleName.trim()) {
+      errors.roleName = 'Role is required';
+    } else if (this.roleName.trim().length < 2) {
+      errors.roleName = 'Role must be at least 2 characters';
+    } else if (this.roleName.trim().length > 50) {
+      errors.roleName = 'Role must not exceed 50 characters';
+    } else {
+      errors.roleName = '';
+    }
+    
+    this.fieldErrors.set(errors);
+  }
+
+  validateExperienceLevel(): void {
+    this.touched.experienceLevel = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (this.experienceLevel === null || this.experienceLevel === undefined || this.experienceLevel < 0) {
+      errors.experienceLevel = 'Please select an experience level';
+    } else {
+      errors.experienceLevel = '';
+    }
+    
+    this.fieldErrors.set(errors);
+  }
+
+  validateCareerGoal(): void {
+    this.touched.careerGoal = true;
+    const errors = { ...this.fieldErrors() };
+    
+    if (!this.careerGoal.trim()) {
+      errors.careerGoal = 'Career goal is required';
+    } else if (this.careerGoal.trim().length < 3) {
+      errors.careerGoal = 'Career goal must be at least 3 characters';
+    } else if (this.careerGoal.trim().length > 200) {
+      errors.careerGoal = 'Career goal must not exceed 200 characters';
+    } else {
+      errors.careerGoal = '';
+    }
+    
+    this.fieldErrors.set(errors);
+  }
+
+  validateAllFields(): boolean {
+    this.validateName();
+    this.validateEmail();
+    this.validatePassword();
+    this.validateRole();
+    this.validateExperienceLevel();
+    this.validateCareerGoal();
+
+    const errors = this.fieldErrors();
+    return !errors.name && !errors.email && !errors.password && 
+           !errors.roleName && !errors.experienceLevel && !errors.careerGoal;
   }
 
   submitSignup(): void {
+    if (!this.validateAllFields()) {
+      this.error.set('Please fix all errors before submitting.');
+      return;
+    }
+
     this.error.set('');
     this.loading.set(true);
-
-    console.log('🚀 Signup: Starting registration process');
-    console.log('📝 Signup: User data:', { name: this.name, email: this.email, roleName: this.roleName, experienceLevel: this.experienceLevel });
-    console.log('🎯 Signup: Skills to add:', this.skills());
-    console.log('📊 Signup: Number of skills:', this.skills().length);
-
-    // Step 1: Register user
     this.authService.register({
-      name: this.name,
-      email: this.email,
+      name: this.name.trim(),
+      email: this.email.trim().toLowerCase(),
       password: this.password,
-      roleName: this.roleName,
+      roleName: this.roleName.trim(),
       experienceLevel: this.experienceLevel,
-      careerGoal: this.careerGoal,
+      careerGoal: this.careerGoal.trim(),
     }).subscribe({
-      next: (response: any) => {
-        console.log('✅ Signup: User registered successfully');
-        console.log('📦 Signup: Full registration response:', response);
-        console.log('🔍 Signup: Response structure:', {
-          hasData: !!response?.data,
-          hasId: !!response?.data?.id,
-          userId: response?.data?.id,
-          dataKeys: response?.data ? Object.keys(response.data) : []
+      next: () => {
+        this.router.navigate(['/login'], { 
+          queryParams: { 
+            registered: 'true',
+            message: 'Account created successfully! Please sign in to continue.' 
+          } 
         });
-
-        const userId = response?.data?.id;
-        console.log('🆔 Signup: Extracted user ID:', userId);
-
-        // Step 2: Add skills if any
-        if (this.skills().length > 0) {
-          if (userId) {
-            const skillsPayload = {
-              userId,
-              skills: this.skills().map(s => ({ skillName: s.name, currentLevel: s.level })),
-            };
-            console.log('📡 Signup: Preparing to add skills');
-            console.log('📤 Signup: Skills API payload:', JSON.stringify(skillsPayload, null, 2));
-            console.log('🌐 Signup: API endpoint:', `${this.apiBase}/UserSkills`);
-            
-            this.userService.addUserSkills(skillsPayload).subscribe({
-              next: (result) => {
-                console.log('✅ Signup: Skills added successfully');
-                console.log('📥 Signup: Skills API response:', result);
-                console.log('🎉 Signup: Registration complete! Redirecting to login...');
-                this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
-              },
-              error: (err) => {
-                console.error('❌ Signup: Failed to add skills');
-                console.error('📋 Signup: Error status:', err.status);
-                console.error('📋 Signup: Error message:', err.message);
-                console.error('📋 Signup: Error body:', err.error);
-                console.error('📋 Signup: Full error object:', err);
-                console.warn('⚠️ Signup: User created but skills failed - redirecting to login anyway');
-                // User created but skills failed - still redirect to login
-                this.router.navigate(['/login'], { queryParams: { registered: 'true', skillsError: 'true' } });
-              },
-            });
-          } else {
-            console.error('❌ Signup: Cannot add skills - User ID is missing!');
-            console.error('📋 Signup: Response.data:', response?.data);
-            console.error('📋 Signup: Full response:', response);
-            console.warn('⚠️ Signup: This is a BACKEND ISSUE - /api/Auth/register should return user.id');
-            this.router.navigate(['/login'], { queryParams: { registered: 'true', skillsError: 'true' } });
-          }
-        } else {
-          console.log('ℹ️ Signup: No skills to add, redirecting to login');
-          this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
-        }
       },
       error: (err) => {
-        console.error('❌ Signup: Registration failed');
-        console.error('📋 Signup: Error status:', err.status);
-        console.error('📋 Signup: Error message:', err.message);
-        console.error('📋 Signup: Error body:', err.error);
-        console.error('📋 Signup: Full error:', err);
         this.loading.set(false);
-        this.error.set(err?.error?.message ?? 'Failed to create account. Please try again.');
+        const errorMessage = err?.error?.message || err?.message || 'Failed to create account. Please try again.';
+        
+        // Check if it's an email already exists error
+        if (errorMessage.toLowerCase().includes('email') && 
+            (errorMessage.toLowerCase().includes('exist') || 
+             errorMessage.toLowerCase().includes('already') ||
+             errorMessage.toLowerCase().includes('taken') ||
+             errorMessage.toLowerCase().includes('registered'))) {
+          this.error.set('This email is already registered. Please use a different email or login instead.');
+          const errors = { ...this.fieldErrors() };
+          errors.email = 'This email is already in use';
+          this.fieldErrors.set(errors);
+        } else if (errorMessage.toLowerCase().includes('username') || errorMessage.toLowerCase().includes('name')) {
+          this.error.set(errorMessage);
+          const errors = { ...this.fieldErrors() };
+          errors.name = 'Invalid username';
+          this.fieldErrors.set(errors);
+        } else if (errorMessage.toLowerCase().includes('password')) {
+          this.error.set(errorMessage);
+          const errors = { ...this.fieldErrors() };
+          errors.password = 'Invalid password';
+          this.fieldErrors.set(errors);
+        } else {
+          this.error.set(errorMessage);
+        }
       },
     });
   }

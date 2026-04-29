@@ -2,7 +2,7 @@
 using AI_Course_Recommendation_System.Models;
 using AI_Course_Recommendation_System.Services;
 using AutoMapper;
-using DTO;
+using AI_Course_Recommendation_System.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;

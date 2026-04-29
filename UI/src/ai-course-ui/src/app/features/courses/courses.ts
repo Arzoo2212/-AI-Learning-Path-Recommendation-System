@@ -22,17 +22,17 @@ import { Course } from '../../core/models/course.model';
           </svg>
           <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onFilterChange()"
             placeholder="Search courses..."
-            class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
+            class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"/>
         </div>
         <select [(ngModel)]="levelFilter" (ngModelChange)="onFilterChange()"
-          class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white">
+          class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white">
           <option value="">All Levels</option>
           <option value="beginner">Beginner</option>
           <option value="intermediate">Intermediate</option>
           <option value="advanced">Advanced</option>
         </select>
         <select [(ngModel)]="categoryFilter" (ngModelChange)="onFilterChange()"
-          class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white">
+          class="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white">
           <option value="">All Categories</option>
           @for (cat of categories(); track cat) {
             <option [value]="cat">{{ cat }}</option>
@@ -64,7 +64,7 @@ import { Course } from '../../core/models/course.model';
       } @else {
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           @for (course of courses(); track course.id) {
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all flex flex-col">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col">
               <div class="p-5 flex-1">
                 <div class="flex items-center justify-between mb-3">
                   <span class="text-xs font-medium px-2.5 py-1 rounded-full"
@@ -77,7 +77,7 @@ import { Course } from '../../core/models/course.model';
                 <p class="text-xs text-gray-500 leading-relaxed mb-4">{{ course.description }}</p>
                 <div class="flex flex-wrap gap-1.5">
                   @for (tag of course.tags; track tag) {
-                    <span class="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full">{{ tag }}</span>
+                    <span class="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full">{{ tag }}</span>
                   }
                 </div>
               </div>
@@ -95,7 +95,7 @@ import { Course } from '../../core/models/course.model';
                 <div class="flex items-center justify-between">
                   <span class="text-xs text-gray-500">{{ course.durationHours }}h</span>
                   <button (click)="enroll(course.id)"
-                    class="px-4 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition">
+                    class="px-4 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition">
                     Enroll
                   </button>
                 </div>

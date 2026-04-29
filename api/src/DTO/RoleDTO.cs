@@ -1,15 +1,12 @@
 ﻿
+
 using System.ComponentModel.DataAnnotations;
 
-namespace DTO
+namespace AI_Course_Recommendation_System.DTO
 {
-    public class SkillDTO
+    public class RoleDTO
     {
-
         [Required]
         public required string Name { get; set; }
-
-
     }
-
 }

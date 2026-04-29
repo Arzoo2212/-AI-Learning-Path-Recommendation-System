@@ -6,7 +6,7 @@ using AutoMapper;
 using AI_Course_Recommendation_System.Data;
 using AI_Course_Recommendation_System.Models;
 using AI_Course_Recommendation_System.Services;
-using DTO;
+using AI_Course_Recommendation_System.DTO;
 
 public class DuplicateEmail
 {

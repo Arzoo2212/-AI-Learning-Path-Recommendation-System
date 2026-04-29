@@ -2,7 +2,7 @@
 using AI_Course_Recommendation_System.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using DTO;
+using AI_Course_Recommendation_System.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
