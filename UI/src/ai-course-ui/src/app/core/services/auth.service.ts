@@ -36,9 +36,15 @@ export class AuthService {
   login(email: string, password: string) {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/login`, { email, password }).pipe(
       tap(res => {
+        // Ensure roleName is properly set from the backend response
+        const user = {
+          ...res.userDTO,
+          roleName: res.userDTO.roleName || '' // Fallback to empty string if not provided
+        };
+        
         localStorage.setItem('auth_token', res.token);
-        localStorage.setItem('auth_user', JSON.stringify(res.userDTO));
-        this._currentUser.set(res.userDTO);
+        localStorage.setItem('auth_user', JSON.stringify(user));
+        this._currentUser.set(user);
         this.isLoggedIn.set(true);
       }),
       catchError(err => {

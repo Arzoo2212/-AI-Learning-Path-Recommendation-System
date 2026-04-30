@@ -12,40 +12,36 @@ export class LearningService {
   private http = inject(HttpClient);
   private base = environment.apiUrl;
 
-  // TODO: Replace with actual backend endpoints when implemented
   getSkills(userId: number): Observable<Skill[]> {
-    // TEMPORARY: Using placeholder requiredLevel calculation
-    // PROPER IMPLEMENTATION: Backend should return requiredLevel based on:
-    //   1. User's career goal
-    //   2. Job market analysis
-    //   3. AI-powered skill requirement analysis
     return this.http.get<ApiResponse<any>>(`${this.base}/UserSkills/${userId}`).pipe(
       map(res => {
         if (!res.data || !res.data.skills) return [];
         return res.data.skills.map((s: any) => ({
-          id: 0,
+          id: s.id || 0,
           name: s.skillName,
           category: s.category || 'General',
           currentLevel: s.currentLevel,
-          // TEMPORARY: Default to 2 levels above current (capped at 5)
-          // REPLACE THIS: Use s.requiredLevel from backend when available
-          requiredLevel: s.requiredLevel || Math.min(s.currentLevel + 2, 5),
+          requiredLevel: s.requiredLevel || s.currentLevel, // Use backend value or default to current
         }));
       })
     );
   }
 
   getSkillGaps(userId: number): Observable<SkillGap[]> {
-    return this.getSkills(userId).pipe(
-      map(skills => {
-        return skills
-          .filter(s => s.currentLevel < s.requiredLevel)
-          .map(s => ({
-            skill: s,
-            gap: s.requiredLevel - s.currentLevel,
-            priority: (s.requiredLevel - s.currentLevel >= 3 ? 'high' : 
-                      s.requiredLevel - s.currentLevel === 2 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
-          }));
+    return this.http.get<ApiResponse<any>>(`${this.base}/SkillGap/${userId}`).pipe(
+      map(res => {
+        if (!res.data || !res.data.gaps) return [];
+        return res.data.gaps.map((g: any) => ({
+          skill: {
+            id: g.skillId || 0,
+            name: g.skillName,
+            category: g.category || 'General',
+            currentLevel: g.currentLevel,
+            requiredLevel: g.requiredLevel,
+          },
+          gap: g.gap || (g.requiredLevel - g.currentLevel),
+          priority: g.priority || 'low',
+        }));
       })
     );
   }
