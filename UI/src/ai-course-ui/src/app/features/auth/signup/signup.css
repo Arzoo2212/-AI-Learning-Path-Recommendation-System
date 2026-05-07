@@ -1,0 +1,17 @@
+.field-error {
+  font-size: 9px;
+  color: #dc2626;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-success {
+  font-size: 9px;
+  color: #16a34a;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

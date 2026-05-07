@@ -12,7 +12,10 @@ namespace AI_Course_Recommendation_System.DTO
         public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-       
+
+        public int RoleId { get; set; }
+        
+
         [Required]
         public string RoleName { get; set; }
         [Required]

@@ -6,16 +6,7 @@ import { Topbar } from '../topbar/topbar';
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, Sidebar, Topbar],
-  template: `
-    <div class="flex h-screen bg-gray-50 overflow-hidden">
-      <app-sidebar />
-      <div class="flex flex-col flex-1 overflow-hidden">
-        <app-topbar />
-        <main class="flex-1 overflow-y-auto p-6">
-          <router-outlet />
-        </main>
-      </div>
-    </div>
-  `,
+  templateUrl: './shell.html',
+  styleUrl: './shell.css',
 })
 export class Shell {}

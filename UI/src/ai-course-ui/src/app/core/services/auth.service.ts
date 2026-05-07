@@ -1,7 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError, map } from 'rxjs';
+import { tap, catchError, map, switchMap } from 'rxjs';
 import { User } from '../models/user.model';
+import { ApiResponse } from '../models/api-response.model';
 import { environment } from '../../../environments/environment';
 
 export interface LoginResponse {
@@ -36,16 +37,23 @@ export class AuthService {
   login(email: string, password: string) {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/login`, { email, password }).pipe(
       tap(res => {
-        // Ensure roleName is properly set from the backend response
-        const user = {
-          ...res.userDTO,
-          roleName: res.userDTO.roleName || '' // Fallback to empty string if not provided
-        };
-        
+        // Store token immediately so the subsequent getUser call is authenticated
         localStorage.setItem('auth_token', res.token);
+        this.isLoggedIn.set(true);
+      }),
+      switchMap(res =>
+        // Fetch full user profile to get all fields (e.g. roleName) that login response may omit
+        this.http.get<ApiResponse<User>>(`${environment.apiUrl}/User/${res.userDTO.id}`).pipe(
+          map(userRes => userRes.data),
+          catchError(() => {
+            // If the full fetch fails, fall back to the login response data
+            return [res.userDTO];
+          })
+        )
+      ),
+      tap(user => {
         localStorage.setItem('auth_user', JSON.stringify(user));
         this._currentUser.set(user);
-        this.isLoggedIn.set(true);
       }),
       catchError(err => {
         throw err;
@@ -66,5 +74,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('auth_token');
+  }
+
+  refreshUser(user: User): void {
+    localStorage.setItem('auth_user', JSON.stringify(user));
+    this._currentUser.set(user);
   }
 }

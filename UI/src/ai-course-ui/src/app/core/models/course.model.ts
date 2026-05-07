@@ -2,15 +2,16 @@ export interface Course {
   id: number;
   title: string;
   description: string;
+  thumbnailUrl: string;
   provider: string;
   category: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  url: string;
+  skillName: string;
+  level: string;
   durationHours: number;
   rating: number;
   enrolledCount: number;
-  thumbnailUrl?: string;
   tags: string[];
-  skills: string[];
 }
 
 export interface LearningPath {

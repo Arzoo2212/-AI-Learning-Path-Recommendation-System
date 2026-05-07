@@ -1,13 +1,14 @@
 using AI_Course_Recommendation_System.Data;
+using AI_Course_Recommendation_System.DTO;
 using AI_Course_Recommendation_System.Models;
 using AI_Course_Recommendation_System.Services;
-using AI_Course_Recommendation_System.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtSettings")["Secret"]);
@@ -23,7 +24,11 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();

@@ -11,8 +11,9 @@ namespace AI_Course_Recommendation_System.Data
             public DbSet<UserSkill> UserSkills { get; set; }
             public DbSet<RoleSkill> RoleSkills { get; set; }
             public DbSet<UserRole> UserRoles { get; set; }
+            public DbSet<Course> Courses { get; set; }
 
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
                 base.OnModelCreating(modelBuilder);
                 modelBuilder.Entity<UserSkill>()
@@ -41,6 +42,7 @@ namespace AI_Course_Recommendation_System.Data
                 modelBuilder.Entity<User>()
                    .HasIndex(u => u.Email)
                    .IsUnique();
+            
             // Roles
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Frontend Developer" },

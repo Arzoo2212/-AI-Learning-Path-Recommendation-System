@@ -14,7 +14,9 @@ namespace AI_Course_Recommendation_System.DTO
         public string Password { get; set; }
 
         [Required]
-        public string RoleName { get; set; }   
+        public string RoleName { get; set; }
+
+       
 
         public int ExperienceLevel { get; set; }
 

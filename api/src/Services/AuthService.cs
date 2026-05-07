@@ -73,6 +73,7 @@ namespace AI_Course_Recommendation_System.Services
                 UserRole = userRole,
 
                 RoleId = role.Id,
+                
                 Role = role,
 
                 ExperienceLevel = dto.ExperienceLevel,
