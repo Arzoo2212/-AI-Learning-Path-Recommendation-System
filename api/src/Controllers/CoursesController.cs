@@ -61,7 +61,7 @@ namespace AI_Course_Recommendation_System.Controllers
             if (!highGapSkills.Any())
                 return Ok(new List<Course>());
 
-            // Load all courses into memory, then filter by skill name matching
+            
             var allCourses = await _context.Courses.ToListAsync();
 
             var recommendedCourses = allCourses

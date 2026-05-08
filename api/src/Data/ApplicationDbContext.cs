@@ -12,6 +12,10 @@ namespace AI_Course_Recommendation_System.Data
             public DbSet<RoleSkill> RoleSkills { get; set; }
             public DbSet<UserRole> UserRoles { get; set; }
             public DbSet<Course> Courses { get; set; }
+            public DbSet<UserCourseEnrollment> UserCourseEnrollments { get; set; }
+            public DbSet<UserActivityLog> UserActivityLogs { get; set; }
+            public DbSet<LearningPath> LearningPaths { get; set; }
+            public DbSet<LearningPathCourse> LearningPathCourses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
@@ -65,6 +69,13 @@ namespace AI_Course_Recommendation_System.Data
                 new RoleSkill { Id = 3, RoleId = 2, SkillId = 5, RequiredLevel = 4 }
             );
 
+            modelBuilder.Entity<UserCourseEnrollment>()
+            .HasIndex(e => new { e.UserId, e.CourseId })
+            .IsUnique();
+            modelBuilder.Entity<LearningPathCourse>()
+            .HasOne(lpc => lpc.LearningPath)
+            .WithMany(lp => lp.LearningPathCourses)
+            .HasForeignKey(lpc => lpc.LearningPathId);
             //// Users
             //modelBuilder.Entity<User>().HasData(
             //    new User { Id = 1, Name = "Arzoo", Email = "arzoo@test.com", RoleId = 1 }

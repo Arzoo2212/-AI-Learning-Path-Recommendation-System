@@ -17,8 +17,7 @@ namespace AI_Course_Recommendation_System.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<SkillGapDTO>>> GetSkillGap(
-            int userId)
+        public async Task<ActionResult<IEnumerable<SkillGapDTO>>> GetSkillGap(int userId)
         {
             // Get user
             var user = await _context.Users

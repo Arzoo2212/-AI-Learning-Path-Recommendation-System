@@ -21,7 +21,7 @@ export class LearningService {
           name: s.skillName,
           category: s.category || 'General',
           currentLevel: s.currentLevel,
-          requiredLevel: s.requiredLevel || s.currentLevel, // Use backend value or default to current
+          requiredLevel: s.requiredLevel || s.currentLevel, 
         }));
       })
     );
@@ -49,9 +49,9 @@ getSkillGap(userId: number): Observable<SkillGap[]> {
   );
 }
 
-  // Placeholder methods - return empty data until backend implements these
+ 
   getCourses(_params?: { search?: string; level?: string; category?: string }): Observable<Course[]> {
-    // TODO: Implement when backend has course endpoints
+  
     return EMPTY;
   }
 

@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LearningService } from '../../core/services/learning.service';
 import { Progress, LearningPath } from '../../core/models/course.model';
@@ -6,7 +7,7 @@ import { Progress, LearningPath } from '../../core/models/course.model';
 @Component({
   selector: 'app-progress',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './progress.html',
   styleUrl: './progress.css',
 })
@@ -28,7 +29,8 @@ export class ProgressPage implements OnInit {
 
   maxHours = computed(() => {
     const activity = this.progress()?.weeklyActivity ?? [];
-    return Math.max(...activity.map((d) => d.hours), 1);
+    const max = Math.max(...activity.map((d) => d.hours), 1);
+    return max;
   });
 
   ngOnInit(): void {
@@ -43,5 +45,21 @@ export class ProgressPage implements OnInit {
       next: (p) => this.paths.set(p),
       error: () => {},
     });
+  }
+
+  /** Count completed courses in a path — used in template to avoid pipe dependency */
+  completedInPath(path: LearningPath): number {
+    return path.courses.filter(c => c.status === 'completed').length;
+  }
+
+ 
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  /** Bar height as a percentage of the max */
+  barHeight(hours: number): number {
+    const max = this.maxHours();
+    return max > 0 ? Math.round((hours / max) * 100) : 0;
   }
 }
