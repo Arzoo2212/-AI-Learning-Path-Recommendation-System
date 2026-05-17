@@ -2,114 +2,111 @@
 
   <!-- Header -->
   <div>
-    <h1 class="text-2xl font-bold text-gray-900">Progress Tracking</h1>
-    <p class="text-gray-500 mt-1 text-sm">Your learning journey at a glance</p>
+    <h1 class="text-2xl font-bold text-white">Progress Tracking</h1>
+    <p class="text-white/40 mt-1 text-sm">Your learning journey at a glance</p>
   </div>
 
   <!-- Loading skeleton -->
   @if (loading()) {
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       @for (i of [1,2,3,4]; track i) {
-        <div class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse text-center">
-          <div class="h-8 bg-gray-200 rounded w-1/2 mx-auto mb-2"></div>
-          <div class="h-3 bg-gray-200 rounded w-2/3 mx-auto"></div>
+        <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-5 animate-pulse text-center">
+          <div class="h-8 bg-white/[0.06] rounded w-1/2 mx-auto mb-2"></div>
+          <div class="h-3 bg-white/[0.06] rounded w-2/3 mx-auto"></div>
         </div>
       }
     </div>
 
-  <!-- Error -->
   } @else if (error()) {
-    <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 flex items-center gap-2">
+    <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400 flex items-center gap-2">
       <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
       </svg>
       {{ error() }}
     </div>
 
-  <!-- Content -->
   } @else if (progress()) {
     @let p = progress()!;
 
     <!-- Stats cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-center">
-        <p class="text-3xl font-bold text-indigo-600">{{ p.totalCoursesCompleted }}</p>
-        <p class="text-sm text-gray-500 mt-1">Courses Completed</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-5 text-center">
+        <p class="text-3xl font-bold text-indigo-400">{{ p.totalCoursesCompleted }}</p>
+        <p class="text-sm text-white/40 mt-1">Courses Completed</p>
       </div>
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-center">
-        <p class="text-3xl font-bold text-purple-600">{{ p.totalHoursLearned }}</p>
-        <p class="text-sm text-gray-500 mt-1">Hours Learned</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-5 text-center">
+        <p class="text-3xl font-bold text-purple-400">{{ p.totalHoursLearned }}</p>
+        <p class="text-sm text-white/40 mt-1">Hours Learned</p>
       </div>
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-center">
-        <p class="text-3xl font-bold text-orange-500">{{ p.currentStreak }}</p>
-        <p class="text-sm text-gray-500 mt-1">Day Streak 🔥</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-5 text-center">
+        <p class="text-3xl font-bold text-orange-400">{{ p.currentStreak }}</p>
+        <p class="text-sm text-white/40 mt-1">Day Streak 🔥</p>
       </div>
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-center">
-        <p class="text-3xl font-bold text-green-600">{{ completionRate() }}%</p>
-        <p class="text-sm text-gray-500 mt-1">Completion Rate</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-5 text-center">
+        <p class="text-3xl font-bold text-green-400">{{ completionRate() }}%</p>
+        <p class="text-sm text-white/40 mt-1">Completion Rate</p>
       </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
       <!-- Weekly Activity bar chart -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 class="font-semibold text-gray-900 mb-1">Weekly Activity</h2>
-        <p class="text-xs text-gray-400 mb-5">Hours learned this week</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-6">
+        <h2 class="font-semibold text-white mb-1">Weekly Activity</h2>
+        <p class="text-xs text-white/25 mb-5">Hours learned this week</p>
         @if (p.weeklyActivity.length) {
           <div class="flex items-end gap-2 h-36">
             @for (day of p.weeklyActivity; track day.day) {
               <div class="flex-1 flex flex-col items-center gap-1.5">
-                <span class="text-xs text-gray-400 font-medium">{{ day.hours > 0 ? day.hours + 'h' : '' }}</span>
+                <span class="text-xs text-white/30 font-medium">{{ day.hours > 0 ? day.hours + 'h' : '' }}</span>
                 <div class="w-full rounded-t-md transition-all duration-500 relative group"
                   [style.height]="barHeight(day.hours) + '%'"
-                  [class]="day.hours === 0 ? 'bg-gray-100' : 'bg-gradient-to-t from-indigo-500 to-purple-400'"
+                  [class]="day.hours === 0 ? 'bg-white/[0.04]' : 'bg-gradient-to-t from-indigo-500 to-purple-400'"
                   style="min-height: 6px; max-height: 100%">
-                  <!-- Tooltip -->
-                  <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                  <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/[0.06]">
                     {{ day.hours }}h
                   </div>
                 </div>
-                <span class="text-xs font-medium text-gray-500">{{ day.day }}</span>
+                <span class="text-xs font-medium text-white/40">{{ day.day }}</span>
               </div>
             }
           </div>
         } @else {
           <div class="flex flex-col items-center justify-center py-10 text-center">
-            <svg class="w-10 h-10 text-gray-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-10 h-10 text-white/10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
             </svg>
-            <p class="text-sm text-gray-400">No activity this week</p>
-            <a routerLink="/learning-paths" class="text-xs text-indigo-500 hover:underline mt-1">Start a course →</a>
+            <p class="text-sm text-white/30">No activity this week</p>
+            <a routerLink="/learning-paths" class="text-xs text-indigo-400 hover:text-indigo-300 mt-1">Start a course →</a>
           </div>
         }
       </div>
 
       <!-- Learning Path Progress -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-6">
         <div class="flex items-center justify-between mb-1">
-          <h2 class="font-semibold text-gray-900">Learning Path Progress</h2>
-          <a routerLink="/learning-paths" class="text-xs text-indigo-500 hover:underline">View all →</a>
+          <h2 class="font-semibold text-white">Learning Path Progress</h2>
+          <a routerLink="/learning-paths" class="text-xs text-indigo-400 hover:text-indigo-300">View all →</a>
         </div>
-        <p class="text-xs text-gray-400 mb-5">Your active paths</p>
+        <p class="text-xs text-white/25 mb-5">Your active paths</p>
         @if (paths().length) {
           <div class="space-y-5">
             @for (path of paths(); track path.id) {
               <div>
                 <div class="flex items-center justify-between mb-1.5">
-                  <p class="text-sm font-medium text-gray-800 truncate flex-1 mr-2">{{ path.title }}</p>
+                  <p class="text-sm font-medium text-white/70 truncate flex-1 mr-2">{{ path.title }}</p>
                   <span class="text-sm font-semibold flex-shrink-0"
-                    [class]="path.completionPercent === 100 ? 'text-green-600' : 'text-indigo-600'">
+                    [class]="path.completionPercent === 100 ? 'text-green-400' : 'text-indigo-400'">
                     {{ path.completionPercent }}%
                   </span>
                 </div>
-                <div class="w-full bg-gray-100 rounded-full h-2">
+                <div class="w-full bg-white/[0.06] rounded-full h-2">
                   <div class="h-2 rounded-full transition-all duration-500"
                     [class]="path.completionPercent === 100 ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-indigo-500 to-purple-500'"
                     [style.width.%]="path.completionPercent">
                   </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">
+                <p class="text-xs text-white/25 mt-1">
                   {{ completedInPath(path) }}/{{ path.courses.length }} courses · {{ path.totalHours }}h total
                 </p>
               </div>
@@ -117,11 +114,11 @@
           </div>
         } @else {
           <div class="flex flex-col items-center justify-center py-10 text-center">
-            <svg class="w-10 h-10 text-gray-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-10 h-10 text-white/10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
             </svg>
-            <p class="text-sm text-gray-400">No learning paths yet</p>
-            <a routerLink="/learning-paths" class="text-xs text-indigo-500 hover:underline mt-1">Generate a path →</a>
+            <p class="text-sm text-white/30">No learning paths yet</p>
+            <a routerLink="/learning-paths" class="text-xs text-indigo-400 hover:text-indigo-300 mt-1">Generate a path →</a>
           </div>
         }
       </div>
@@ -129,22 +126,16 @@
 
     <!-- Activity Timeline -->
     @if (p.recentActivity.length) {
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <h2 class="font-semibold text-gray-900 mb-1">Activity Timeline</h2>
-        <p class="text-xs text-gray-400 mb-5">Your recent learning activity</p>
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-6">
+        <h2 class="font-semibold text-white mb-1">Activity Timeline</h2>
+        <p class="text-xs text-white/25 mb-5">Your recent learning activity</p>
         <div class="relative">
-          <!-- Vertical line -->
-          <div class="absolute left-3.5 top-0 bottom-0 w-0.5 bg-gray-100"></div>
+          <div class="absolute left-3.5 top-0 bottom-0 w-0.5 bg-white/[0.06]"></div>
           <div class="space-y-5">
             @for (item of p.recentActivity; track item.date) {
               <div class="flex items-start gap-4 relative">
-                <!-- Icon dot -->
-                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-white shadow-sm"
-                  [class]="item.type === 'completed'
-                    ? 'bg-green-500'
-                    : item.type === 'achievement'
-                      ? 'bg-yellow-400'
-                      : 'bg-blue-500'">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 z-10 border-2 border-[#0f0f13]"
+                  [class]="item.type === 'completed' ? 'bg-green-500' : item.type === 'achievement' ? 'bg-yellow-400' : 'bg-indigo-500'">
                   @if (item.type === 'completed') {
                     <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -159,18 +150,12 @@
                     </svg>
                   }
                 </div>
-                <!-- Content -->
                 <div class="flex-1 pb-1">
-                  <p class="text-sm text-gray-800">{{ item.description }}</p>
-                  <p class="text-xs text-gray-400 mt-0.5">{{ formatDate(item.date) }}</p>
+                  <p class="text-sm text-white/70">{{ item.description }}</p>
+                  <p class="text-xs text-white/25 mt-0.5">{{ formatDate(item.date) }}</p>
                 </div>
-                <!-- Badge -->
                 <span class="flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full"
-                  [class]="item.type === 'completed'
-                    ? 'bg-green-100 text-green-700'
-                    : item.type === 'achievement'
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-blue-100 text-blue-700'">
+                  [class]="item.type === 'completed' ? 'bg-green-500/10 text-green-400' : item.type === 'achievement' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-indigo-500/10 text-indigo-400'">
                   {{ item.type }}
                 </span>
               </div>
@@ -179,13 +164,12 @@
         </div>
       </div>
     } @else if (!loading()) {
-      <!-- Empty timeline -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
-        <svg class="w-10 h-10 text-gray-200 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="bg-[#0f0f13] rounded-xl border border-white/[0.06] p-6 text-center">
+        <svg class="w-10 h-10 text-white/10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <p class="text-sm text-gray-400">No activity yet — start a course to see your timeline</p>
-        <a routerLink="/learning-paths" class="text-xs text-indigo-500 hover:underline mt-1 inline-block">Go to Learning Paths →</a>
+        <p class="text-sm text-white/30">No activity yet — start a course to see your timeline</p>
+        <a routerLink="/learning-paths" class="text-xs text-indigo-400 hover:text-indigo-300 mt-1 inline-block">Go to Learning Paths →</a>
       </div>
     }
   }

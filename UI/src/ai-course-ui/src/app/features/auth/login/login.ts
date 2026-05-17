@@ -13,6 +13,7 @@ export class Login implements OnInit, OnDestroy {
   email = '';
   password = '';
   rememberMe = false;
+  showPassword = false;
   error = signal('');
   successMessage = signal('');
   loading = signal(false);

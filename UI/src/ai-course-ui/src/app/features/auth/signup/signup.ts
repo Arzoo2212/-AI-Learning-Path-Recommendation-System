@@ -25,6 +25,7 @@ export class Signup implements OnInit, OnDestroy {
   roleName = '';
   experienceLevel = 0;
   careerGoal = '';
+  showPassword = false;
   error = signal('');
   loading = signal(false);
   fieldErrors = signal<FieldError>({

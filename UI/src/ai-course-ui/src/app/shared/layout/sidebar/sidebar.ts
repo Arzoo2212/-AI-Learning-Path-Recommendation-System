@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 interface NavItem {
   label: string;
@@ -14,6 +15,32 @@ interface NavItem {
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
+  collapsed = signal(false);
+
+  toggleCollapse(): void {
+    this.collapsed.set(!this.collapsed());
+  }
+
+  get userName(): string {
+    return this.auth.currentUser()?.name ?? 'User';
+  }
+
+  get userInitials(): string {
+    return this.userName
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+
   navItems: NavItem[] = [
     {
       label: 'Dashboard',
